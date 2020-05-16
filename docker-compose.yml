@@ -1,28 +1,50 @@
-front:
-    image: nginx
-    ports:
-        - "80:80"
-    links:
-        - "engine:engine"
-    volumes:
-        - ".:/home/docker:ro"
-        - "./docker/front/default.conf:/etc/nginx/conf.d/default.conf:ro"
+version: '2'
 
-engine:
-    build: ./docker/engine/
-    volumes:
-        - ".:/home/docker:rw"
-        - "./docker/engine/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro"
-    links:
-        - "db:db"
-    working_dir: "/home/docker"
+services:
+    front:
+        image: nginx
+        ports:
+            - "80:80"
+        links:
+            - "engine:engine"
+        volumes:
+            - ".:/home/docker:ro"
+            - "./docker/front/default.conf:/etc/nginx/conf.d/default.conf:ro"
+        networks:
+            - default
 
-db:
-    image: mysql:5.7
-    ports:
-        - "3306:3306"
-    environment:
-        - "MYSQL_ROOT_PASSWORD=cfrespccfradmin"
-        - "MYSQL_USER=cfrespccfradmin"
-        - "MYSQL_PASSWORD=root"
-        - "MYSQL_DATABASE=cfrespccfradmin"
+    engine:
+        build: ./docker/engine/
+        volumes:
+            - ".:/home/docker:rw"
+            - "./docker/engine/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro"
+        links:
+            - "db:db"
+        working_dir: "/home/docker"
+        networks:
+            - default
+        dns_search:
+            - engine
+
+    db:
+        image: mysql:5.7
+        ports:
+            - "3306:3306"
+        environment:
+            - "MYSQL_ROOT_PASSWORD=cfrespccfradmin"
+            - "MYSQL_USER=cfrespccfradmin"
+            - "MYSQL_PASSWORD=root"
+            - "MYSQL_DATABASE=cfrespccfradmin"
+        volumes:
+            - db:/var/lib/mysql:rw
+        networks:
+            - default
+        dns_search:
+            - db
+
+
+volumes:
+    db: {}
+
+networks:
+    default: {}
