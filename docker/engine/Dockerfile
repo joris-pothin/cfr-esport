@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.3-alpine
 MAINTAINER Joris Pothin <jorispothin@gmail.com>
 
 ARG PHP_APCU_VERSION=5.1.18
@@ -8,6 +8,8 @@ RUN apt-get update \
     && apt-get install -y \
         libicu-dev \
         zlib1g-dev \
+        libzip-dev \
+        stow \
     && docker-php-source extract \
     && curl -L -o /tmp/apcu-$PHP_APCU_VERSION.tgz https://pecl.php.net/get/apcu-$PHP_APCU_VERSION.tgz \
     && curl -L -o /tmp/xdebug-$PHP_XDEBUG_VERSION.tgz http://xdebug.org/files/xdebug-$PHP_XDEBUG_VERSION.tgz \
@@ -28,3 +30,7 @@ RUN apt-get update \
     && docker-php-source delete \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer \
     && chmod +x /usr/local/bin/composer
+
+COPY . /
+
+CMD php -S 127.0.0.1:80 app/public/index.php
