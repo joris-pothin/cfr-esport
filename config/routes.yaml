@@ -4,4 +4,4 @@
 
 index:
     path: /
-    controller: App\Controller\TestController::index
+    controller: App\Controller\DefaultController::index

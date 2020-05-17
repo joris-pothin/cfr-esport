@@ -8,6 +8,8 @@ RUN apt-get update \
     && apt-get install -y \
         libicu-dev \
         zlib1g-dev \
+        libzip-dev \
+        stow \
     && docker-php-source extract \
     && curl -L -o /tmp/apcu-$PHP_APCU_VERSION.tgz https://pecl.php.net/get/apcu-$PHP_APCU_VERSION.tgz \
     && curl -L -o /tmp/xdebug-$PHP_XDEBUG_VERSION.tgz http://xdebug.org/files/xdebug-$PHP_XDEBUG_VERSION.tgz \

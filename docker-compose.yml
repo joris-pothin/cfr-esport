@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
     front:
@@ -22,23 +22,31 @@ services:
             - "db:db"
         working_dir: "/home/docker"
         networks:
-            - default
+            default:
+                aliases:
+                    - ${FRONT_SERVER_NAME}
         dns_search:
             - engine
 
     db:
         image: mysql:5.7
         ports:
-            - "3306:3306"
-        environment:
-            - "MYSQL_ROOT_PASSWORD=cfrespccfradmin"
-            - "MYSQL_USER=cfrespccfradmin"
-            - "MYSQL_PASSWORD=root"
-            - "MYSQL_DATABASE=cfrespccfradmin"
+            - 3306:3306
+        restart: always
+        env_file:
+            - ./.env
+#        environment:
+#            - MYSQL_ROOT_PASSWORD=root
+#            - MYSQL_USER=cfrespccfradmin
+#            - MYSQL_PASSWORD=root
+#            - MYSQL_DATABASE=cfrespccfradmin
         volumes:
-            - db:/var/lib/mysql:rw
+            - ./database:/var/lib/mysql:rw
+            - ./docker/mysql/mysql.cnf:/etc/mysql/conf.d/cfr-esport.cnf
         networks:
-            - default
+            default:
+                aliases:
+                    - service.mysql
         dns_search:
             - db
 
