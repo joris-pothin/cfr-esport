@@ -1,7 +1,0 @@
-CREATE DATABASE IF NOT EXISTS cfrespccfradmin;
-
--- CREATE USER 'root'@'%' IDENTIFIED BY 'root';
-
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root';
-
-FLUSH PRIVILEGES;
